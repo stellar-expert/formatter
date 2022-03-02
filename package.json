@@ -1,0 +1,19 @@
+{
+  "name": "@stellar-expert/formatter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Formatting utils and common formats for numeric, string, and binary data",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stellar-expert/formatter.git"
+  },
+  "author": "orbitlens <orbit@stellar.expert>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stellar-expert/formatter/issues"
+  },
+  "peerDependencies": {
+    "bignumber.js": ">= 4"
+  }
+}
