@@ -127,7 +127,7 @@ export function formatPrice(value, significantDigits = 4) {
  * @param {Number|String|Bignumber} amount - Value to format
  * @return {String}
  */
-function adjustPrecision(amount = '0') {
+export function adjustPrecision(amount = '0') {
     if (typeof amount === 'number') {
         amount = amount.toFixed(7)
     } else {
