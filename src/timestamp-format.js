@@ -45,7 +45,7 @@ export function toUnixTimestamp(date) {
  * @return {String}
  */
 export function formatDateUTC(date) {
-    return new Date(normalizeDate(date) * 1000)
+    return normalizeDate(date)
         .toISOString()
         .replace(/(T|\.\d+Z)/g, ' ') // make it more human friendly
         .trim()
