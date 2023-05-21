@@ -31,15 +31,18 @@ function addDecimalsSeparators(value, separator = ',', trimTrailingZeros = true)
  * @return {Bignumber}
  */
 export function safeParseBignumber(value) {
-    if (!value) return new Bignumber(0)
+    if (!value)
+        return new Bignumber(0)
     if (typeof value === 'number') {
         value = value.toFixed(7)
     }
     if (typeof value === 'string') {
         value = new Bignumber(value)
-        if (value.isNaN()) return new Bignumber(0)
+        if (value.isNaN())
+            return new Bignumber(0)
     }
-    if (value instanceof Bignumber) return value
+    if (value instanceof Bignumber)
+        return value
     throw new TypeError(`Unsupported BigNumber value type: ${typeof value}`)
 }
 
@@ -54,14 +57,17 @@ export function isValidInt64Amount(value, denominate = true, nonZero = false) {
     try {
         let parsed = safeParseBignumber(value)
         if (nonZero) {
-            if (!parsed.gt(new Bignumber(0))) return false
+            if (!parsed.gt(new Bignumber(0)))
+                return false
         } else {
-            if (!parsed.gte(new Bignumber(0))) return false
+            if (!parsed.gte(new Bignumber(0)))
+                return false
         }
         if (denominate) {
             parsed = parsed.times(10000000)
         }
-        if (parsed.gt(new Bignumber('9223372036854775807'))) return false
+        if (parsed.gt(new Bignumber('9223372036854775807')))
+            return false
         return true
     } catch (e) {
         return false
