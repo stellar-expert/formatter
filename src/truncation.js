@@ -19,7 +19,7 @@ export function stripTrailingZeros(value) {
  * @return {String}
  */
 export function shortenString(value, symbols = 8) {
-    if (value.length <= symbols) return value
+    if (!value || value.length <= symbols) return value
     const affixLength = Math.max(2, Math.floor(symbols / 2))
     return value.substr(0, affixLength) + '…' + value.substr(-affixLength)
 }
