@@ -1,19 +1,19 @@
-import Bignumber from 'bignumber.js'
 import {stripTrailingZeros} from './truncation'
+import {toStroops} from './stroops'
 
 function addDecimalsSeparators(value, separator = ',', trimTrailingZeros = true) {
     //TODO: use Bignumber.toFormat() method instead
     //split numeric to parts
-    let [int, reminder] = value.split('.'),
-        res = ''
+    let [int, reminder] = value.split('.')
+    let res = ''
     //split digit groups
     while (int.length > 3) {
-        res = separator + int.substr(-3) + res
-        int = int.substr(0, int.length - 3)
+        res = separator + int.substring(int.length - 3) + res
+        int = int.substring(0, int.length - 3)
     }
     //strip negative sign
     if (int === '-') {
-        res = res.substr(1)
+        res = res.substring(1)
     }
     res = int + res
     if (reminder) {
@@ -26,27 +26,6 @@ function addDecimalsSeparators(value, separator = ',', trimTrailingZeros = true)
 }
 
 /**
- * Parse string value as a Bignumber
- * @param {String|Number|Bignumber} value
- * @return {Bignumber}
- */
-export function safeParseBignumber(value) {
-    if (!value)
-        return new Bignumber(0)
-    if (typeof value === 'number') {
-        value = value.toFixed(7)
-    }
-    if (typeof value === 'string') {
-        value = new Bignumber(value)
-        if (value.isNaN())
-            return new Bignumber(0)
-    }
-    if (value instanceof Bignumber)
-        return value
-    throw new TypeError(`Unsupported BigNumber value type: ${typeof value}`)
-}
-
-/**
  * Check if a provided value can be safely used as token amount in Stellar operations
  * @param {String} value
  * @param {Boolean} denominate
@@ -55,20 +34,17 @@ export function safeParseBignumber(value) {
  */
 export function isValidInt64Amount(value, denominate = true, nonZero = false) {
     try {
-        let parsed = safeParseBignumber(value)
+        const parsed = denominate ?
+            toStroops(value) :
+            BigInt(value)
         if (nonZero) {
-            if (!parsed.gt(new Bignumber(0)))
+            if (parsed <= 0n)
                 return false
         } else {
-            if (!parsed.gte(new Bignumber(0)))
+            if (parsed < 0n)
                 return false
         }
-        if (denominate) {
-            parsed = parsed.times(10000000)
-        }
-        if (parsed.gt(new Bignumber('9223372036854775807')))
-            return false
-        return true
+        return parsed <= 9223372036854775807n
     } catch (e) {
         return false
     }
@@ -76,7 +52,7 @@ export function isValidInt64Amount(value, denominate = true, nonZero = false) {
 
 /**
  * Format a number with specified precision and decimals separator
- * @param {String|Number|Bignumber} value - Numeric value to format
+ * @param {String|Number|BigInt} value - Numeric value to format
  * @param {Number} [precision] - Desired precision (7 digits by default)
  * @param {String} [separator] - Decimals separator
  * @return {String}
@@ -86,25 +62,23 @@ export function formatWithPrecision(value, precision = 7, separator = ',') {
     if (!(precision >= 0) || precision > 7) {
         precision = 7
     }
-    return addDecimalsSeparators(safeParseBignumber(value).toFixed(precision), separator, true)
+    value = setPrecision(value, precision)
+    return addDecimalsSeparators(value, separator, true)
 }
 
 /**
- * Format a number using automatically determined precision and decimals separator
- * @param {String|Number|Bignumber} value - Numeric value to format
+ * Format a number using automatically determined precision
+ * @param {String|Number} value - Numeric value to format
  * @param {String} [separator] - Decimals separator
  * @return {String}
  */
 export function formatWithAutoPrecision(value, separator = ',') {
-    if (!value) return '0'
-    if (typeof value === 'number') {
-        value = value.toFixed(14)
-    }
-    if (typeof value === 'string') {
-        value = new Bignumber(value)
-    }
-    let p = Math.ceil(Math.log10(value.toNumber())),
-        reminderPrecision = p > 1 ? (3 - p) : (Math.abs(p) + 2)
+    if (!value)
+        return '0'
+    const p = Math.ceil(Math.log10(parseFloat(value)))
+    let reminderPrecision = p > 1 ?
+        (3 - p) :
+        (Math.abs(p) + 2)
     if (reminderPrecision < 0) {
         reminderPrecision = 0
     }
@@ -118,10 +92,11 @@ export function formatWithAutoPrecision(value, separator = ',') {
  * @return {String}
  */
 export function formatWithAbbreviation(value, decimals = 2) {
-    let abs = Math.abs(value),
-        tier = Math.log10(abs) / 3 | 0
+    let abs = Math.abs(value)
+    const tier = Math.log10(abs) / 3 | 0
 
-    if (tier <= 0) return formatWithAutoPrecision(value)
+    if (tier <= 0)
+        return formatWithAutoPrecision(value)
 
     const suffix = ['', 'K', 'M', 'G', 'T', 'P'][tier]
     abs = stripTrailingZeros((abs / Math.pow(10, tier * 3)).toFixed(decimals))
@@ -130,13 +105,16 @@ export function formatWithAbbreviation(value, decimals = 2) {
 
 /**
  * Format a number with rounding to specific precision group
- * @param {String|Number|Bignumber} value - Value o format
+ * @param {String|Number|BigInt} value - Value to format
  * @param {Number} group - Logarithmic group rate for rounding
  * @return {String}
  */
 export function formatWithGrouping(value, group) {
-    if (!value) return '0'
-    let precision = group >= 1 ? 0 : Math.abs(Math.log10(group))
+    if (!value)
+        return '0'
+    const precision = (group >= 1 || group === 0) ?
+        0 :
+        Math.abs(Math.log10(group))
     if (group >= 1) {
         value = Math.ceil(value / group) * group
     }
@@ -150,24 +128,41 @@ export function formatWithGrouping(value, group) {
  * @return {String}
  */
 export function formatPrice(value, significantDigits = 4) {
-    const [int] = safeParseBignumber(value).toString()
-    if (int !== '0') {
+    const primitive = (typeof value === 'number') ?
+        value.toFixed(7) :
+        value.toString()
+    const [int, fract] = primitive.split('.')
+    if (int.replace('-', '') !== '0') {
         significantDigits -= int.length
+        if (significantDigits < 0) {
+            significantDigits = 0
+        }
+    } else {
+        if (!(fract > 0))
+            return '0'
+        significantDigits = Math.max(Math.ceil(Math.abs(Math.log10(parseFloat('.' + fract)))), significantDigits)
     }
-    const res = formatWithPrecision(value, significantDigits, '')
-    return stripTrailingZeros(res)
+    return formatWithPrecision(value, significantDigits, '')
 }
 
 /**
  * Format amount according to default Stellar precision
- * @param {Number|String|Bignumber} amount - Value to format
+ * @param {Number|String} amount - Value to format
  * @return {String}
  */
 export function adjustPrecision(amount = '0') {
+    return stripTrailingZeros(setPrecision(amount, 7))
+}
+
+function setPrecision(amount, precision) {
     if (typeof amount === 'number') {
-        amount = amount.toFixed(7)
+        amount = amount.toFixed(precision)
     } else {
-        amount = new Bignumber(amount.toString()).toFixed(7)
+        amount = amount.toString()
+        const sidx = amount.indexOf('.')
+        if (sidx) {
+            amount = amount.slice(0, sidx + precision + 1)
+        }
     }
-    return stripTrailingZeros(amount)
+    return amount
 }

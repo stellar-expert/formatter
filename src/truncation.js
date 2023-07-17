@@ -4,11 +4,14 @@
  * @return {String}
  */
 export function stripTrailingZeros(value) {
-    if (typeof value !== 'string') return value
+    if (typeof value !== 'string')
+        return value
     let [int, reminder] = value.split('.')
-    if (!reminder) return int
+    if (!reminder)
+        return int
     reminder = reminder.replace(/0+$/, '')
-    if (!reminder.length) return int
+    if (!reminder.length)
+        return int
     return int + '.' + reminder
 }
 
@@ -19,7 +22,8 @@ export function stripTrailingZeros(value) {
  * @return {String}
  */
 export function shortenString(value, symbols = 8) {
-    if (!value || value.length <= symbols) return value
+    if (!value || value.length <= symbols)
+        return value
     const affixLength = Math.max(2, Math.floor(symbols / 2))
-    return value.substr(0, affixLength) + '…' + value.substr(-affixLength)
+    return value.substring(0, affixLength) + '…' + value.substring(value.length - affixLength)
 }
