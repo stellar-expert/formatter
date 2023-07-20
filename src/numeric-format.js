@@ -1,5 +1,5 @@
-import {stripTrailingZeros} from './truncation'
-import {toStroops} from './stroops'
+import {stripTrailingZeros} from './truncation.js'
+import {toStroops} from './stroops.js'
 
 function addDecimalsSeparators(value, separator = ',', trimTrailingZeros = true) {
     //TODO: use Bignumber.toFormat() method instead

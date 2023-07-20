@@ -1,4 +1,4 @@
-import {stripTrailingZeros} from './truncation'
+import {stripTrailingZeros} from './truncation.js'
 
 /**
  * Convert value in stroops (Int64 amount) to the normal string representation
@@ -11,7 +11,7 @@ export function fromStroops(valueInStroops) {
             valueInStroops :
             BigInt(valueInStroops.toString())
         let negative = false
-        if (parsed < 0) {
+        if (parsed < 0n) {
             negative = true
             parsed *= -1n
         }
