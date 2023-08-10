@@ -160,7 +160,7 @@ function setPrecision(amount, precision) {
     } else {
         amount = amount.toString()
         const sidx = amount.indexOf('.')
-        if (sidx) {
+        if (sidx >= 0) {
             amount = amount.slice(0, sidx + precision + 1)
         }
     }

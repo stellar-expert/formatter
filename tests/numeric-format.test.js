@@ -33,7 +33,7 @@ describe('formatWithPrecision', () => {
         [0.0010001, '0.001', 3],
         [1234546454, '1,234,546,454'],
         [1234546454.222, '1234546454', 0, ''],
-        [450000000, '450,000,000', undefined, ',']
+        ['450000000', '450,000,000']
     ]
 
     test.each(testCases)('formatWithPrecision(%p)->%p', (src, expected, precision = undefined, separator = undefined) => {
