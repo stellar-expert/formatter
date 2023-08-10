@@ -1,4 +1,11 @@
-import {formatWithAutoPrecision, formatWithAbbreviation, formatWithGrouping, formatPrice, adjustPrecision} from '../src/numeric-format'
+import {
+    formatWithAutoPrecision,
+    formatWithPrecision,
+    formatWithAbbreviation,
+    formatWithGrouping,
+    formatPrice,
+    adjustPrecision,
+} from '../src/numeric-format'
 
 describe('formatWithAutoPrecision', () => {
     const testCases = [
@@ -8,11 +15,29 @@ describe('formatWithAutoPrecision', () => {
         [0.0000001, '0.0000001'],
         [0.0010001, '0.001'],
         [1234546454, '1,234,546,454'],
-        [1234546454.222, '1234546454', '']
+        [1234546454.222, '1234546454', ''],
+        [450000000, '450,000,000', ',']
     ]
 
     test.each(testCases)('formatWithAutoPrecision(%p)->%p', (src, expected, separator = undefined) => {
         expect(formatWithAutoPrecision(src, separator)).toEqual(expected)
+    })
+})
+
+describe('formatWithPrecision', () => {
+    const testCases = [
+        [6, '6'],
+        [1234.565464, '1,234.57', 2],
+        [1.23412, '1.234', 3],
+        [0.0000001, '0.0000001'],
+        [0.0010001, '0.001', 3],
+        [1234546454, '1,234,546,454'],
+        [1234546454.222, '1234546454', 0, ''],
+        [450000000, '450,000,000', undefined, ',']
+    ]
+
+    test.each(testCases)('formatWithPrecision(%p)->%p', (src, expected, precision = undefined, separator = undefined) => {
+        expect(formatWithPrecision(src, precision, separator)).toEqual(expected)
     })
 })
 
@@ -42,7 +67,7 @@ describe('formatWithGrouping', () => {
         [1234.5654647, 1000000, '1,000,000'],
         [1234.5654647, 0.1, '1,234.6'],
         [1234.5654647, 0.001, '1,234.565'],
-        [1234.5654647, 0.000001, '1,234.565465'],
+        [1234.5654647, 0.000001, '1,234.565465']
     ]
 
     test.each(testCases)('formatWithGrouping(%p, %p)->%p', (src, decimalsGroup, expected) => {
