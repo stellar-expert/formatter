@@ -9,7 +9,7 @@ export function fromStroops(valueInStroops) {
     try {
         let parsed = typeof valueInStroops === 'bigint' ?
             valueInStroops :
-            BigInt(valueInStroops.toString())
+            BigInt(valueInStroops.toString().replace(/\.\d*/,''))
         let negative = false
         if (parsed < 0n) {
             negative = true
