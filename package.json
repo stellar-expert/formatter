@@ -1,6 +1,6 @@
 {
   "name": "@stellar-expert/formatter",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "private": true,
   "description": "Formatting utils and common formats for numeric, string, timestamps and binary data",
   "type": "module",

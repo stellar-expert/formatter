@@ -58,12 +58,7 @@ export function isValidInt64Amount(value, denominate = true, nonZero = false) {
  * @return {String}
  */
 export function formatWithPrecision(value, precision = 7, separator = ',') {
-    //use 7 decimals if not specified
-    if (!(precision >= 0) || precision > 7) {
-        precision = 7
-    }
-    value = setPrecision(value, precision)
-    return addDecimalsSeparators(value, separator, true)
+    return addDecimalsSeparators(setPrecision(value, precision), separator, true)
 }
 
 /**
