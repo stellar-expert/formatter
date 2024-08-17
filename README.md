@@ -3,11 +3,7 @@
 ## Installation
 
 ```
- "dependencies": {
-    "@stellar-expert/formatter": "github:stellar-expert/formatter#v2.0.0",
-    ...
-  }
-}
+npm i @stellar-expert/formatter
 ```
 
 ## Usage
