@@ -1,9 +1,9 @@
 {
   "name": "@stellar-expert/formatter",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "Formatting utils and common formats for numeric, string, timestamp and binary data",
-  "type": "module",
-  "main": "src/index.js",
+  "main": "./lib/formatter.js",
+  "module": "./src/index.js",
   "sideEffects": false,
   "exports": {
     "import": "./src/index.js",
