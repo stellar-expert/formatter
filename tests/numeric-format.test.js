@@ -33,7 +33,8 @@ describe('formatWithPrecision', () => {
         [0.0010001, '0.001', 3],
         [1234546454, '1,234,546,454'],
         [1234546454.222, '1234546454', 0, ''],
-        ['450000000', '450,000,000']
+        ['450000000', '450,000,000'],
+        ['450000000000000000000000000', '450,000,000,000,000,000,000,000,000']
     ]
 
     test.each(testCases)('formatWithPrecision(%p)->%p', (src, expected, precision = undefined, separator = undefined) => {
@@ -50,7 +51,8 @@ describe('formatWithAbbreviation', () => {
         [0.0010001, '0.001'],
         [10000000, '10M'],
         [1234546454, '1.23G'],
-        [1234546454.222, '1.23455G', 5]
+        [1234546454.222, '1.23455G', 5],
+        ['450000000000000000000000000', '450Y']
     ]
 
     test.each(testCases)('formatWithAbbreviation(%p)->%p', (src, expected, decimals = undefined) => {

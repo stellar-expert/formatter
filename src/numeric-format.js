@@ -2,7 +2,6 @@ import {stripTrailingZeros} from './truncation.js'
 import {toStroops} from './stroops.js'
 
 function addDecimalsSeparators(value, separator = ',', trimTrailingZeros = true) {
-    //TODO: use Bignumber.toFormat() method instead
     //split numeric to parts
     let [int, reminder] = value.split('.')
     let res = ''
@@ -80,6 +79,7 @@ export function formatWithAutoPrecision(value, separator = ',') {
     return formatWithPrecision(value, reminderPrecision, separator)
 }
 
+const abbreviationPrefixes = ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y', 'R', 'Q']
 /**
  * Convert a number to a human-readable format using abbreviation
  * @param {Number} value - Value to format
@@ -93,7 +93,7 @@ export function formatWithAbbreviation(value, decimals = 2) {
     if (tier <= 0)
         return formatWithAutoPrecision(value)
 
-    const suffix = ['', 'K', 'M', 'G', 'T', 'P'][tier]
+    const suffix = abbreviationPrefixes[tier]
     abs = stripTrailingZeros((abs / Math.pow(10, tier * 3)).toFixed(decimals))
     return `${value < 0 ? '-' : ''}${abs || '0'}${suffix}`
 }
@@ -118,7 +118,7 @@ export function formatWithGrouping(value, group) {
 
 /**
  * Format a number as price with specified significant digits precision
- * @param {String|Number|Bignumber} value - Value to format
+ * @param {String|Number|BigInt} value - Value to format
  * @param {Number} significantDigits - Significant digits for automatic formatting
  * @return {String}
  */
