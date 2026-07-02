@@ -1,33 +1,38 @@
 {
   "name": "@stellar-expert/formatter",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Formatting utils and common formats for numeric, string, timestamp and binary data",
-  "main": "./lib/formatter.js",
-  "module": "./src/index.js",
-  "sideEffects": false,
-  "exports": {
-    "import": "./src/index.js",
-    "require": "./lib/formatter.js"
-  },
-  "scripts": {
-    "build": "webpack --mode=production --config webpack.config.cjs",
-    "test": "jest"
-  },
+  "author": "orbitlens <orbit@stellar.expert>",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/stellar-expert/formatter.git"
   },
-  "author": "orbitlens <orbit@stellar.expert>",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/stellar-expert/formatter/issues"
   },
+  "type": "module",
+  "main": "lib/formatter.js",
+  "module": "src/index.js",
+  "types": "src/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    "types": "./index.d.ts",
+    "import": "./src/index.js",
+    "require": "./lib/formatter.js"
+  },
+  "scripts": {
+    "prepare": "rollup -c",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
   "devDependencies": {
-    "@babel/core": "^7.28.6",
-    "@babel/preset-env": "^7.28.6",
-    "babel-loader": "^10.0.0",
-    "jest": "^30.2.0",
-    "webpack": "^5.104.1",
-    "webpack-cli": "^6.0.1"
-  }
+    "@rollup/plugin-terser": "1.0.0",
+    "rollup": "4.62.2",
+    "jest": "30.4.2"
+  },
+  "files": [
+    "lib",
+    "src",
+    "!src/bundle.js"
+  ]
 }

@@ -1,9 +1,0 @@
-node_modules/
-.npm
-
-.idea
-
-tests
-babel.config.cjs
-webpack.config.cjs
-src/commonjs.js
