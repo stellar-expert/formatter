@@ -1,6 +1,6 @@
 {
   "name": "@stellar-expert/formatter",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Formatting utils and common formats for numeric, string, timestamp and binary data",
   "author": "orbitlens <orbit@stellar.expert>",
   "license": "MIT",
@@ -17,7 +17,7 @@
   "types": "src/index.d.ts",
   "sideEffects": false,
   "exports": {
-    "types": "./index.d.ts",
+    "types": "./src/index.d.ts",
     "import": "./src/index.js",
     "require": "./lib/formatter.js"
   },
